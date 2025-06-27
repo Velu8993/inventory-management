@@ -13,7 +13,6 @@ import expenseRoutes from "./routes/expenseRoutes"; // http://localhost:8000/exp
 
 // CONFIGURATIONS
 dotenv.config();
-
 const app = express();
 app.use(express.json());
 app.use(helmet());
@@ -21,24 +20,15 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(
-  cors({
-    origin: "https://master.d15rg6gkpsh2vz.amplifyapp.com",
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+app.use(cors());
 
-app.options("*", cors());
+/* ROUTES */
+app.use("/dashboard", dashboardRoutes); // http://localhost:8000/dashboard
+app.use("/products", productRoutes); // http://localhost:8000/products
+app.use("/users", userRoutes); // http://localhost:8000/users
+app.use("/expenses", expenseRoutes); // http://localhost:8000/expenses
 
-// ROOUTES
-app.use("/dashboard", dashboardRoutes);
-app.use("/products", productRoutes);
-app.use("/users", userRoutes);
-app.use("/expenses", expenseRoutes);
-
-// SERVER
+/* SERVER */
 const port = Number(process.env.PORT) || 3001;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on port ${port}`);
