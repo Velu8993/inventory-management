@@ -6,7 +6,6 @@ import {
   Archive,
   CircleDollarSign,
   Clipboard,
-  Icon,
   Layout,
   LucideIcon,
   Menu,
@@ -23,6 +22,7 @@ interface SidebarLinkProps {
   icon: LucideIcon;
   label: string;
   isCollapsed: boolean;
+  onLinkClick: () => void;
 }
 
 const SidebarLink = ({
@@ -30,13 +30,18 @@ const SidebarLink = ({
   icon: Icon,
   label,
   isCollapsed,
+  onLinkClick, 
 }: SidebarLinkProps) => {
   const pathname = usePathname();
   const isActive =
     pathname === href || (pathname === "/" && href === "/dashboard");
 
+  const handleClick = () => {
+    onLinkClick(); 
+  };
+
   return (
-    <Link href={href}>
+    <Link href={href} onClick={handleClick}>
       <div
         className={`cursor-pointer flex items-center ${
           isCollapsed ? "justify-center py-4" : "justify-start px-8 py-4"
@@ -68,9 +73,15 @@ const Sidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
   };
 
+  const handleLinkClick = () => {
+    if (window.innerWidth < 768) {
+      dispatch(setIsSidebarCollapsed(true));
+    }
+  };
+
   const sidebarClassNames = `fixed flex flex-col ${
     isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
-  } bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-4=`;
+  } bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-40`;
 
   return (
     <div className={sidebarClassNames}>
@@ -109,36 +120,42 @@ const Sidebar = () => {
           icon={Layout}
           label="Dashboard"
           isCollapsed={isSidebarCollapsed}
+          onLinkClick={handleLinkClick}
         />
         <SidebarLink
           href="/inventory"
           icon={Archive}
           label="Inventory"
           isCollapsed={isSidebarCollapsed}
+          onLinkClick={handleLinkClick}
         />
         <SidebarLink
           href="/products"
           icon={Clipboard}
           label="Products"
           isCollapsed={isSidebarCollapsed}
+          onLinkClick={handleLinkClick}
         />
         <SidebarLink
           href="/users"
           icon={User}
           label="Users"
           isCollapsed={isSidebarCollapsed}
+          onLinkClick={handleLinkClick}
         />
         <SidebarLink
           href="/settings"
           icon={SlidersHorizontal}
           label="Settings"
           isCollapsed={isSidebarCollapsed}
+          onLinkClick={handleLinkClick}
         />
         <SidebarLink
           href="/expenses"
           icon={CircleDollarSign}
           label="Expenses"
           isCollapsed={isSidebarCollapsed}
+          onLinkClick={handleLinkClick}
         />
       </div>
 
